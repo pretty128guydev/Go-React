@@ -3,9 +3,11 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import IUser from "../types/user.type";
-import { register } from "../services/auth.service";
+import { login, register } from "../services/auth.service";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
+  let navigate: NavigateFunction = useNavigate();
   const [successful, setSuccessful] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
@@ -48,6 +50,22 @@ const Register: React.FC = () => {
       (response) => {
         setMessage(response.data.message);
         setSuccessful(true);
+        login(username, password).then(
+            () => {
+              navigate("/profile");
+              window.location.reload();
+            },
+            (error) => {
+              const resMessage =
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString();
+      
+              setMessage(resMessage);
+            }
+          );
       },
       (error) => {
         const resMessage =

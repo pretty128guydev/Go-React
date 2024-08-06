@@ -3,7 +3,7 @@ import { getCurrentUser } from "../services/auth.service";
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
-  console.log(currentUser)
+  
 
   return (
     <div className="container">
