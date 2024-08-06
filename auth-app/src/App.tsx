@@ -16,6 +16,7 @@ import BoardModerator from "./components/BoardModerator";
 import BoardAdmin from "./components/BoardAdmin";
 
 import EventBus from "./common/EventBus";
+import Footer from "./components/Layout/Footer";
 
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
@@ -27,8 +28,8 @@ const App: React.FC = () => {
 
     if (user) {
       setCurrentUser(user);
-      setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-      setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+    //   setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
+    //   setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
     }
 
     EventBus.on("logout", logOut);
@@ -46,7 +47,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="app">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
           bezKoder
@@ -121,10 +122,11 @@ const App: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/user" element={<BoardUser />} />
-          <Route path="/mod" element={<BoardModerator />} />
+          <Route path="/mod" element={<BoardModerator />} />    
           <Route path="/admin" element={<BoardAdmin />} />
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 };

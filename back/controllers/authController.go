@@ -18,18 +18,18 @@ func (a *AuthController) Register(c *gin.Context) {
 	log.Println("Register endpoint hit")
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	if err := user.HashPassword(user.Password); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error hashing password"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error hashing password"})
 		return
 	}
 
 	// Save user to the database
 	if err := db.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error saving user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error saving user"})
 		return
 	}
 
@@ -45,20 +45,20 @@ func (a *AuthController) Login(c *gin.Context) {
 	}
 
 	var user models.User
-	// Find user by email
+	// Find user by username
 	if err := db.DB.Where("username = ?", input.Username).First(&user).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid username or password"})
 		return
 	}
 
 	if err := user.CheckPassword(input.Password); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid email or password"})
 		return
 	}
 
-	token, err := utils.GenerateToken(user.ID)
+	token, err := utils.GenerateToken(user.ID, user.Username, user.Email)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error generating token"})
 		return
 	}
 
