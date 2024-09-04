@@ -12,7 +12,7 @@ var DB *gorm.DB
 func Init() {
 	// Replace these with your actual MySQL credentials
 	username := "root"
-	password := "NEWPASSWORD"
+	password := ""
 	dbname := "go_react"
 
 	// Data Source Name (DSN)
