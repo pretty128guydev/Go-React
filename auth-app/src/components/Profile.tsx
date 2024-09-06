@@ -1,9 +1,19 @@
-import React from "react";
-import { getCurrentUser } from "../services/auth.service";
+import React, { useState } from "react";
+import { findUser, getCurrentUser } from "../services/auth.service";
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
-  
+  const [users, setUsers] = useState<any[]>([]);
+
+  const onfindUser = () => {
+    findUser()
+      .then((response) => {
+        setUsers(response);
+      })
+      .catch((error) => {
+        console.error("Error finding users:", error);
+      });
+  };
 
   return (
     <div className="container">
@@ -15,11 +25,21 @@ const Profile: React.FC = () => {
       <p>
         <strong>Email:</strong> {currentUser?.email}
       </p>
-      <strong>Authorities:</strong>
-      {/* <ul>
-        {currentUser?.roles &&
-          currentUser?.roles.map((role: string, index: number) => <li key={index}>{role}</li>)}
-      </ul> */}
+      <button className="btn-primary" onClick={onfindUser}>
+        Find registerd users
+      </button>
+      <ul>
+        {users.length > 0 ? (
+          users.map((user, index) => (
+            <>
+              <li key={index}>Username: {user.username}</li>
+              <li key={index}>Email: {user.email}</li>
+            </>
+          ))
+        ) : (
+          <p>No users found</p>
+        )}
+      </ul>
     </div>
   );
 };

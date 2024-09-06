@@ -12,5 +12,6 @@ func AuthRoutes(router *gin.Engine) {
 	{
 		auth.POST("/signup", Controller.Register)
 		auth.POST("/signin", Controller.Login)
+		auth.POST("/find_users", Controller.FindUser)
 	}
 }
